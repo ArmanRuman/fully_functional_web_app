@@ -14,6 +14,7 @@ A fully functional website built with Python, Flask, HTML, CSS, Bootstrap and SQ
 * There Is a Several Category For Post
 * It Has Error Handling Functionality
 * It Has CK-Editor For Writing Post
+* It Has The Capability Of Searching Post in The Site
 # Front End:
 * HTML
 * CSS
