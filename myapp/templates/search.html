@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<div class="container">
+    <div>
+        <h4> <b>Search result:</b></h4>
+    </div>
+  <div>
+    {% with messages = get_flashed_messages(with_categories=true) -%}
+  {% if messages %}
+    <div class="flashes" >
+    {% for category, message in messages %}
+      <div class=" text-center alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+</div>
+<div class="row">
+    {% if posts %}
+    {% for post in posts %}
+    
+    <div class="col-lg-4 col-md-6 mb-4" id="myid">
+
+        <!-- Bootstrap Card -->
+        <div class="card mycard" style="height: 27rem;">
+            <img src="{{url_for('static',filename='image/'+post.image)}}" alt="Card One" class="card-img-top img-fluid "
+                style="width:20rem;height:10rem;">
+            <div class="card-body">
+                <h6 class="card-title">{{post.title}}</h6>
+                <p class="card-text">
+                    {{post.body|truncate(100,True)|safe}}
+                </p>
+                <div class="d-flex">
+                    <div class="align-self-center mx-auto">
+                <a href="post/{{post.id}}" class="mybtn">Details</a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% elif not posts %}
+    <div class="row">
+        <div class="align-self-center mx-auto">
+             <div class="alert alert-warning text-center">
+                <h4>Sorry!We couldn't find any content what are you looking for.If you want to carry on searching here are a few tips:</h4>
+                <div class="d-flex">
+                <ul class=" mx-auto justify-content-center">
+                    <li>Remember to check your spelling.</li>
+                    <li>Try searching for two or three words.</li>
+                    <li>Be less specific in your wording for a wider search result.</li>
+                </ul>
+            </div>
+             </div>
+        </div>
+    {% endif %}
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function () {
+    
+      $('.col-lg-4').hover(
+        // trigger when mouse hover
+        function () {
+          $(this).animate({
+            marginTop: "-=1%",
+          }, 200);
+        },
+    
+        // trigger when mouse out
+        function () {
+          $(this).animate({
+            marginTop: "0%"
+          }, 200);
+        }
+      );
+    });
+    </script>
+
+{% endblock %}

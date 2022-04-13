@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+{% block title %}BIOMEDICAL{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% for post in posts.items %}
+        <div class="col-lg-4 col-md-12" id="myid">
+            <!-- Bootstrap Card -->
+            <div class="card mycard mb-4" style="height: 27rem;width: 100%;">
+                <img src="{{url_for('static',filename='image/'+post.image)}}" alt="Card One" class="card-img-top img-fluid "
+                    style="width:18rem;height:10rem;">
+                <div class="card-body">
+                    <h6 class="card-title">{{post.title}}</h6>
+                    <p class="card-text">
+                        {{post.body|truncate(90,True)|safe}}
+                    </p>
+                    <div class="d-flex">
+                        <div class="align-self-center mx-auto">
+                    <a href="post/{{post.id}}" class="mybtn">Details</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="container">
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+          {% if posts.page == page_num %}
+            <a class="pagbtn mb-4" href="{{ url_for('biomedical', page=page_num) }}">{{ page_num }}</a>
+          {% else %}
+            <a class="pagbtn mb-4" href="{{ url_for('biomedical', page=page_num) }}">{{ page_num }}</a>
+          {% endif %}
+        {% else %}
+          ...
+        {% endif %}
+      {% endfor %}
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+    
+      $('.col-lg-4').hover(
+        // trigger when mouse hover
+        function () {
+          $(this).animate({
+            marginTop: "-=1%",
+          }, 200);
+        },
+    
+        // trigger when mouse out
+        function () {
+          $(this).animate({
+            marginTop: "0%"
+          }, 200);
+        }
+      );
+    });
+    </script>
+
+{% endblock %}

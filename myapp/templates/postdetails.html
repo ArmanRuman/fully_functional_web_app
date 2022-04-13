@@ -1,0 +1,148 @@
+{% extends 'layout.html' %}
+{% block title %}{{post.title}}{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <!-- Post Content Column -->
+    <div class="col-lg-8 col-md-12 mb-4">
+      <div>
+        {% with messages = get_flashed_messages(with_categories=true) -%}
+      {% if messages %}
+        <div class="flashes" >
+        {% for category, message in messages %}
+          <div class="text-center alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    </div>
+      <div class="card mt-1">
+        <div class="card-body">
+          <!-- Title -->
+          
+          <p class="mypost-title"><b>{{post.title}}</b></p>
+
+          <!-- Date/Time -->
+          <div class="row">
+            <div class="container">
+              <div class="clearfix">
+                <div class="float-right"> <span class="badge badge-pill badge-color">{{post.comments}} Comments</span></div>
+                <div class="float-left"> <span class="badge badge-pill badge-color">Published on: {{ post.date_pub.strftime('%Y-%m-%d') }}</span></div>
+              </div>
+            </div>
+          </div>
+          {% if current_user.has_role('admin')%}
+          <div class="d-flex justify-content-end">
+            <a class="mybtn" href="{{url_for('updatepost',id=post.id)}}">Edit</a>
+            <button type="button" class="mybtn" data-toggle="modal" data-target="#deleteModal">Delete</button>
+          </div>
+          {% endif %}
+          <hr>
+          <!-- Preview Image -->
+          <img class="img-fluid rounded" style="width:900px;height:400px;"
+          src="{{url_for('static',filename='image/'+post.image)}}" alt="">
+
+          <hr>
+
+          <!-- Post Content -->
+          <div class="text-justify mb-2">
+            <p class="mypostdetails">{{post.body|safe}}</p>
+          </div>
+          <div class="mb-2">
+              {{ share.create(title='Share with: ') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Sidebar Widgets Column -->
+    <div class="col-lg-4 col-md-12">
+      <div class="card my-1 mb-4">
+        <div class="card-body">
+          <div class="content-section">
+            <h6 class="text-center"> <b>Popular Projects</b></h6>
+            <p class='text-promotion text-center'>You may like this.Check this out now!
+            <ul class="list-group">
+              {% for post in random_posts%}
+              <li class="list-group-item list-group-item-light  advertise-text"><a class="article-title" href="{{ url_for('post', post_id=post.id,slug=post.slug) }}">{{ post.title }}</a></a></li>
+              {%endfor%}
+            </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+    <!-- /.row -->
+
+    <!-- Comments Form -->
+    <div class="row ">
+      <div class="col-lg-8 col-md-12">
+        <div class="card my-4 ">
+          <h5 class="card-header text-center">Leave a Comment:</h5>
+          <div class="card-body">
+            <form method="POST">
+              <div class="row mb-2">
+                <div class="col-lg-6 col-md-12 mb-2">
+                  <input type="text" name="username" class="form-control" placeholder="Username" required>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-2">
+                  <input type="text" name="email" class="form-control" placeholder="E-mail" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <textarea name="message" class="form-control" rows="3" required></textarea>
+              </div>
+
+              <div class="d-flex mb-3">
+                <div class="align-self-center mx-auto">
+                  <button type="submit" class="btn-comment">Submit</button>
+                </div>
+
+              </div>
+            </form>
+            {% for comment in comments%}
+            <div class="media">
+              <a class="pull-left" href="#"><img class="media-object img-fluid rounded-circle" src="{{url_for('static', filename='img/unknown.png')}}" alt=""></a>
+              <div class="media-body">
+                  <button class="media-heading">{{comment.username}}</button>
+                  <p>{{comment.message}}</p>
+                  <ul class="list-unstyled list-inline media-detail pull-left">
+                      <li><i class="fa fa-calendar"></i>{{ comment.date_pub.strftime('%d %b, %Y') }}</li>
+                  </ul>
+              </div>
+          </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  
+</div>
+ <!-- Modal -->
+ <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="mybtn" data-dismiss="modal">Close</button>
+        <form action="{{url_for('delete',id=post.id)}}" method="POST">
+          <input class="mybtn" type="submit" value="Delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

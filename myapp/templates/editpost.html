@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class=flashes>
+        {% for category, message in messages %}
+        <div class="text-center alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="text-center">Update Post</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" class="form-control" name="title" value="{{post.title}}" id="exampleInputname1"
+                        placeholder="Enter your title...">
+                </div>
+                <a href="{{url_for('static',filename='image/'+post.image)}}">{{url_for('static',filename='image/'+post.image)}}</a>
+                <input type="file" name='photo' accept="image/*" class='form-control mb-3'>
+                <textarea name="body" class="form-control" cols="30" rows="10">{{post.body}}</textarea>
+
+                <button type="submit" class="mainbtn mt-3 mb-3">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
